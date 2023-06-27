@@ -1,0 +1,66 @@
+server:
+  port: 9595
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    type: redis
+    cache-names:
+      - cache1
+      - cache2
+    redis:
+      time-to-live: 60000
+      cache-null-values: true
+  application:
+    name: SECURITY-SERVICE
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:4545
+  datasource:
+    url: jdbc:mysql://localhost:3306/security
+    username: root
+    password: 123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    loggers:
+      enabled: false
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: springboot-security-service
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+resilience4j:
+  circuitbreaker:
+    instances:
+      userVendorBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+

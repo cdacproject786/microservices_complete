@@ -1,0 +1,35 @@
+server:
+  port: 6565
+spring:
+  application:
+    name: ADMIN-SERVICE
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:4545
+  datasource:
+    url: jdbc:mysql://localhost:3306/admin
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    loggers:
+      enabled: false
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: springboot-admin-service
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

@@ -1,0 +1,30 @@
+server:
+  port: 4545
+spring:
+  application:
+    name: CONFIG-SERVER
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/cdacproject786/microservice-config
+          clone-on-start: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    loggers:
+      enabled: false
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: springboot-config-server
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true

@@ -1,0 +1,58 @@
+server:
+  port: 8585
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    type: redis
+    cache-names:
+      - cache1
+      - cache2
+    redis:
+      time-to-live: 60000
+      cache-null-values: true
+  application:
+    name: CUSTOMER-SERVICE
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:4545
+  datasource:
+    url: jdbc:mysql://localhost:3306/user
+    username: root
+    password: 123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    loggers:
+      enabled: false
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: springboot-customer
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  endpoint:
+    health:
+      show-details: always

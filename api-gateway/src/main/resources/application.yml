@@ -1,0 +1,52 @@
+server:
+  port: 5555
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    loggers:
+      enabled: false
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: springboot-api-gateway
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: CUSTOMER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/customer/**
+
+        - id: SECURITY-SERVICE
+          uri: lb://SECURITY-SERVICE
+          predicates:
+            - Path=/security/**
+
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+
+
+
+
+# remote:
+  # home: http://localhost:8030/user/security/demo

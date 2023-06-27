@@ -1,0 +1,40 @@
+server:
+  port: 7575
+spring:
+  application:
+    name: VENDOR-SERVICE
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:4545
+  datasource:
+    url: jdbc:mysql://localhost:3306/vendor
+    username: root
+    password: 123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    loggers:
+      enabled: false
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: springboot-vendor-service
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
